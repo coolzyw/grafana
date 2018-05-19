@@ -14,6 +14,7 @@ table1 = (
     "CREATE TABLE `departments` ("
     "  `dept_no` char(4) NOT NULL,"
     "  `dept_name` varchar(40) NOT NULL,"
+    "  `date_my` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
     "  PRIMARY KEY (`dept_no`), UNIQUE KEY `dept_name` (`dept_name`)"
     ") ENGINE=InnoDB")
 
@@ -25,6 +26,7 @@ table2 = (
     "  `last_name` varchar(16) NOT NULL,"
     "  `gender` enum('M','F') NOT NULL,"
     "  `hire_date` date NOT NULL,"
+    "  `date_my` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
     "  PRIMARY KEY (`emp_no`)"
     ") ENGINE=InnoDB")
 
@@ -45,8 +47,8 @@ insert2 = ("INSERT INTO  employees"
         "VALUES (%s, %s, %s, %s, %s, %s)")
 
 data2 = {}
-data2[0] = (10, date(1997, 6, 14), 'Tom', 'White', 'M', date(2019, 9, 1))
-data2[1] = (11, date(2001, 2, 17), 'Davana', 'Sun', 'F', date(2023, 3, 1))
+data2[0] = (10, date(2001, 5, 19), 'Tom', 'White', 'M', date(2019, 9, 1))
+data2[1] = (11, date(2002, 5, 19), 'Davana', 'Sun', 'F', date(2023, 3, 1))
 
 curr.execute(drop1)
 curr.execute(drop2)
@@ -63,3 +65,4 @@ for each in data2:
 cnx.commit()
 curr.close()
 cnx.close()
+
