@@ -13,3 +13,9 @@ https://anomaly.io/install-collectd-on-debian-ubuntu/
 
 &lt;Plugin "network"&gt;
     Server "myinfluxdb.com" "25826"
+    
+use telegraf as database
+use influxdb to store data
+import dashboard from others
+monitor ubuntu host
+https://lkhill.com/telegraf-influx-grafana-network-stats/
