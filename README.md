@@ -22,3 +22,8 @@ sudo service grafana-server start
 * import dashboard from others
 * monitor ubuntu host
 * https://lkhill.com/telegraf-influx-grafana-network-stats/
+
+## how to run
+* start influxdb server
+* start telegraf server
+* start grafana server
