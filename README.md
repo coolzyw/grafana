@@ -35,3 +35,7 @@ sudo service xxx start/restart
 
 ## install toolbox for collectd-graphite-grafana
 * https://www.unixmen.com/full-monitoring-system-graphite-collectd-statsd-part-1/
+* some configuration details to set up grafana with graphite
+'''
+https://www.linode.com/docs/uptime/monitoring/how-to-install-graphite-and-grafana-on-ubuntu-14-04/
+'''
