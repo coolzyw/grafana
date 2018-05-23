@@ -25,7 +25,13 @@ sudo service grafana-server start
 
 ## how to run
 * start influxdb server
+```
+sudo service influxdb start
+```
 * start telegraf server
+```
+sudo service telegraf start
+```
 * start grafana server
 * note: for ubuntu
 ```
