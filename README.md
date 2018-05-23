@@ -27,7 +27,10 @@ sudo service grafana-server start
 * start influxdb server
 * start telegraf server
 * start grafana server
-* note: for ubuntu, sudo service xxx start/restart
+* note: for ubuntu
+```
+sudo service xxx start/restart
+```
 
 
 ## install toolbox for collectd-graphite-grafana
