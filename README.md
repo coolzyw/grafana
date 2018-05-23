@@ -16,7 +16,7 @@ sudo service grafana-server start
 &lt;Plugin "network"&gt;
     Server "myinfluxdb.com" "25826"
   
-## how to install toolbox  
+## how to install toolbox for telegraf-influxdb-grafana
 * use telegraf as database
 * use influxdb to store data
 * import dashboard from others
@@ -27,3 +27,7 @@ sudo service grafana-server start
 * start influxdb server
 * start telegraf server
 * start grafana server
+
+
+## install toolbox for collectd-graphite-grafana
+* https://www.unixmen.com/full-monitoring-system-graphite-collectd-statsd-part-1/
