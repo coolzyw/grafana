@@ -22,6 +22,7 @@ sudo service grafana-server start
 * import dashboard from others
 * monitor ubuntu host
 * https://lkhill.com/telegraf-influx-grafana-network-stats/
+* remove influxdb and reinstall https://www.howtoinstall.co/en/ubuntu/xenial/influxdb?action=remove
 
 ## how to run
 * start influxdb server
