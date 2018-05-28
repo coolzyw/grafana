@@ -1,0 +1,7 @@
+SELECT
+  UNIX_TIMESTAMP(date) as time_sec,
+  value1 as value,
+  "value1" as metric
+FROM random_data
+WHERE $__timeFilter(date)
+ORDER BY date ASC
