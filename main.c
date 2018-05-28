@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "mysql.h"
 
 int main(int argc, char* argv[]){
@@ -15,8 +16,43 @@ int main(int argc, char* argv[]){
 	0, NULL, 0);
 
 	if(conn){
+
 		printf("Connection success!\n");
 		//FILE* fp = NULL;
+		/*
+		if (mysql_query(conn, "CREATE DATABASE grafana")) // return non-zero if not success
+  		{
+      		fprintf(stderr, "%s\n", mysql_error(conn));
+      		mysql_close(conn);
+      		exit(1);
+  		}
+		  */
+
+		if (mysql_query(conn, "USE grafana"))
+		{
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			mysql_close(conn);
+			exit(1);
+		}
+
+		char drop_table[100];
+		strcpy(drop_table, "DROP TABLE IF EXISTS random_data");
+		if (mysql_query(conn, drop_table))
+		{
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			mysql_close(conn);
+			exit(1);
+		}
+
+		char create_table[100];
+		strcpy(create_table, "CREATE TABLE random_data(value1 INT, value2 INT, date TIMESTAMP)");
+		if (mysql_query(conn, create_table))
+		{
+			fprintf(stderr, "%s\n", mysql_error(conn));
+			mysql_close(conn);
+			exit(1);
+		}
+
 		while(1){
 		    	//fp = fopen("memory_usage.txt", "r");
 			int swap = rand()%100;
@@ -49,3 +85,4 @@ int main(int argc, char* argv[]){
 	mysql_close(conn);
 	return 0;
 }
+
