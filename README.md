@@ -46,3 +46,9 @@ sudo service xxx start/restart
 '''
 https://www.linode.com/docs/uptime/monitoring/how-to-install-graphite-and-grafana-on-ubuntu-14-04/
 '''
+
+## install package for c-api mysql
+* 
+```
+apt-get install libmysqlclient-dev 
+```
