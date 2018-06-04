@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc -I /usr/local/mysql/include/ -L /usr/local/mysql/lib test.c -o run -lmysqlclient
+gcc -Wall -g main.c -o app -I/usr/include/mysql/ -L/usr/include/mysql/lib -lmysqlclient
