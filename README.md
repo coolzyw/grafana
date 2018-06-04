@@ -4,6 +4,9 @@ summer research project
 * login database: ```mysql -u root -p```
 * use python-mysql to execute
 
+## install grafana
+* http://docs.grafana.org/installation/debian/
+
 ## start grafana service:
 ```
 sudo service grafana-server start
