@@ -57,4 +57,7 @@ apt-get install libmysqlclient-dev
 ```
 sudo apt-get install mysql-server
 sudo ufw allow mysql
+sudo service mysql start
+mysql -u root -p
 ```
+* password: mysql
