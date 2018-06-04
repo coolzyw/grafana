@@ -1,7 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "mysql.h"
 
 int main(int argc, char* argv[]){
@@ -16,55 +15,29 @@ int main(int argc, char* argv[]){
 	0, NULL, 0);
 
 	if(conn){
-
 		printf("Connection success!\n");
 		//FILE* fp = NULL;
-		/*
-		if (mysql_query(conn, "CREATE DATABASE grafana")) // return non-zero if not success
-  		{
-      		fprintf(stderr, "%s\n", mysql_error(conn));
-      		mysql_close(conn);
-      		exit(1);
-  		}
-		  */
-
-		if (mysql_query(conn, "USE grafana"))
-		{
-			fprintf(stderr, "%s\n", mysql_error(conn));
-			mysql_close(conn);
-			exit(1);
+		if (mysql_query(conn, "CREATE DATABASE grafana") == 0){
+		      		printf("Database created\n");
+		} 
+		else{
+		      printf("Database creation failed");
+	          printf("MySQL error message: %s\n", mysql_error(&connection));
+	          exit(1);
 		}
-
-		char drop_table[100];
-		strcpy(drop_table, "DROP TABLE IF EXISTS random_data");
-		if (mysql_query(conn, drop_table))
-		{
-			fprintf(stderr, "%s\n", mysql_error(conn));
-			mysql_close(conn);
-			exit(1);
-		}
-
-		char create_table[100];
-		strcpy(create_table, "CREATE TABLE random_data(value1 INT, value2 INT, date TIMESTAMP)");
-		if (mysql_query(conn, create_table))
-		{
-			fprintf(stderr, "%s\n", mysql_error(conn));
-			mysql_close(conn);
-			exit(1);
-		}
-
 		while(1){
-		    	//fp = fopen("memory_usage.txt", "r");
-			int swap = rand()%100;
-			int virt = rand()%100;
-			float phy = rand()%100;
+		    //fp = fopen("memory_usage.txt", "r");
+		    //Create the users_database database
+			int swap = rand();
+			int virt = rand();
+			float phy = rand();
 			//fscanf(fp, "%d%d%f", &swap, &virt, &phy);
 			printf("%d %d %f\n",swap, virt, phy);
 			//fclose(fp);	
 			char str[100];
 			sprintf(str, 
 			"INSERT INTO random_data (date, value1, value2) VALUES ( NOW(), %d, %d)",
-			(int) phy, virt);
+			(int) (phy*1024), virt/1024);
 			int res = mysql_query(conn, str);
 		
 			if (!res){
@@ -85,4 +58,3 @@ int main(int argc, char* argv[]){
 	mysql_close(conn);
 	return 0;
 }
-
