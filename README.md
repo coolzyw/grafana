@@ -52,3 +52,9 @@ https://www.linode.com/docs/uptime/monitoring/how-to-install-graphite-and-grafan
 ```
 apt-get install libmysqlclient-dev 
 ```
+
+## install mysql on cloudlab
+```
+sudo apt-get install mysql-server
+sudo ufw allow mysql
+```
