@@ -64,3 +64,7 @@ sudo service mysql start
 mysql -u root -p
 ```
 * password: mysql
+
+## infiniswap
+* /var/lib/lxc
+* /proj
