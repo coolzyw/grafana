@@ -68,3 +68,4 @@ mysql -u root -p
 ## infiniswap
 * /var/lib/lxc
 * /proj
+* lxc-attach -n test1
