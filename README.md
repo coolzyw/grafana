@@ -75,3 +75,9 @@ mysql -u root -p
 * plugins website: https://github.com/jdbranham/grafana-diagram
 * grafana plugin example: https://github.com/benthorner/grafana-plugin-example
 * plugin example: https://github.com/CorpGlory/grafana-plugin-template-webpack
+
+## self-study AngularJS
+* constructor is used for initialization
+* we can initialize variables in constructor
+* use {{ctrl.variable}} in html for variable
+* can also use ctrl.variable in expressions
