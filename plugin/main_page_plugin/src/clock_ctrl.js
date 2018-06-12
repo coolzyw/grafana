@@ -166,6 +166,6 @@ class ExampleAppPanelCtrl extends PanelCtrl {
   }
 
 }
-ExampleAppPanelCtrl.template = '<h2 class="example-app-heading">Example app!</h2>';
+
 
 ClockCtrl.templateUrl = 'module.html';

@@ -1,28 +1,34 @@
-// The controller is a regular JavaScript function. It is called
-// once when AngularJS runs into the ng-controller declaration.
+var a_canvas = document.getElementById("a");
+var context = a_canvas.getContext("2d");
 
-function InlineEditorController($scope){
+// Draw the face
+context.fillStyle = "yellow";
+context.beginPath();
+context.arc(95, 85, 40, 0, 2*Math.PI);
+context.closePath();
+context.fill();
+context.lineWidth = 2;
+context.stroke();
+context.fillStyle = "black";
 
-    // $scope is a special object that makes
-    // its properties available to the view as
-    // variables. Here we set some default values:
+// Draw the left eye
+context.beginPath();
+context.arc(75, 75, 5, 0, 2*Math.PI);
+context.closePath();
+context.fill();
 
-    $scope.showtooltip = false;
-    $scope.value = 'Edit me.';
+// Draw the right eye
+context.beginPath();
+context.arc(114, 75, 5, 0, 2*Math.PI);
+context.closePath();
+context.fill();
 
-    // Some helper functions that will be
-    // available in the angular declarations
+// Draw the mouth
+context.beginPath();
+context.arc(95, 90, 26, Math.PI, 2*Math.PI, true);
+context.closePath();
+context.fill();
 
-    $scope.hideTooltip = function(){
-
-        // When a model is changed, the view will be automatically
-        // updated by by AngularJS. In this case it will hide the tooltip.
-
-        $scope.showtooltip = false;
-    }
-
-    $scope.toggleTooltip = function(e){
-        e.stopPropagation();
-        $scope.showtooltip = !$scope.showtooltip;
-    }
-}
+// Write "Hello, World!"
+context.font = "30px Garamond";
+context.fillText("Hello, World!",15,175);

@@ -6,6 +6,9 @@
     <!-- Angular Material Javascript now available via Google CDN; version 1.1.6 used here -->
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.6/angular-material.min.js"></script> 
 <div class="clock-panel" ng-style="{height: ctrl.height}">
+    <canvas id="a" width="200" height="200">
+        This text is displayed if your browser does not support HTML5 Canvas.
+    </canvas>
     <span ng-if="ctrl.panel.dateSettings.showDate && ctrl.panel.mode === 'time'"
       <h3 style="font-size: {{ctrl.panel.dateSettings.fontSize}}; font-weight: {{ctrl.panel.dateSettings.fontWeight}};">{{ctrl.date}}</h3>
     </span>
@@ -29,50 +32,6 @@
         You are entering: {{student.fullName()}}
      </div>
      <div> Hello, my name is {{ctrl.happy}}</div>
-
-     <script>
-
-
-        var mainApp = angular.module("mainApp", []);
-        
-        mainApp.controller('studentController', function($scope) {
-           $scope.student = {
-              firstName: "Mahesh",
-              lastName: "Parashar",
-              
-              fullName: function() {
-                 var studentObject;
-                 studentObject = $scope.student;
-                 return studentObject.firstName + " " + studentObject.lastName;
-              }
-           };
-        });
-
-        mainApp.config(function($controllerProvider, $compileProvider, $filterProvider, $provide) {
-    mainApp.register = {
-        component: $compileProvider.component,
-        controller: $controllerProvider.register,
-        directive: $compileProvider.directive,
-        filter: $filterProvider.register,
-        factory: $provide.factory,
-        service: $provide.service
-    };
-});
-
-        angular.module('controllerAsExample', [])
-  .controller('SettingsController1', SettingsController1);
-
-function SettingsController1() {
-  this.name = 'John Smith';
-  this.contacts = [
-    {type: 'phone', value: '408 555 1212'},
-    {type: 'email', value: 'john.smith@example.org'}
-  ];
-}
-
-SettingsController1.prototype.greet = function() {
-  alert(this.name);
-};
-
-     </script>
   </div>
+
+  <script type='text/javascript' src='public/plugins/grafana-clock-panel/test.js'> </script>
