@@ -7,90 +7,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   </head>
   <body>
-
-
-
-
+    <input type="number" id="init" value=""/>
+    <button onclick="initial()">Click to show initial machine number</button> </br>
 
     <canvas id="canvas" width="1000" height="500"> </canvas>
-    <input type="number" id="myNumber" value="">
 
-    <div id="testInputBox"> </div>
-    
-    <button onclick="myFunction()">Try it</button>
-    <button onclick="hello()">Show! </button>
-    <button onclick="hi()">Clear! </button>
-    
-    <form action="" onsubmit="mytest()">
-      Enter name: <input type="text" name="fname">
-      <input type="submit" value="Submit">
-    </form>
+    <input type="number" id="down" value=""/>
+    <button onclick="down_one_daemon()">Click to down a daemon</button>
+    <button onclick="pop_one_daemon()">Click to pop a daemon</button> </br>
 
-    <div id="hello">loading test</div>
+    <input type="number" id="down_bd" value=""/>
+    <button onclick="down_one_bd()">Click to down a bd</button>
+    <button onclick="pop_one_bd()">Click to pop a bd</button> </br>
 
-    <div id="greeting-div"> </div>
+    <input type="number" id="left" value=""/>
+    <input type="number" id="right" value=""/>
+    <button onclick="link()"> LINK! </button>
+    <button onclick="clear_link()"> CLEAR! </button> </br>
 
-    <div id="root"> </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 
 
 
-  
-
-    
-
-    <script>   
-    function mytest() {
-        alert("The form was submitted");
-    }
-    
-    function hi(){
-       console.log("clear button");
-      var c = document.getElementById("myCanvas");
-      var ctx = c.getContext("2d");
-      console.log("canvas width", myCanvas.width, " canvas height ", myCanvas.height);
-      ctx.clearRect(0, 0,myCanvas.width, myCanvas.height);
-    }
-      
-    function hello(){
-      console.log("works!!!!");
-     var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.fillStyle = 'rgb(200, 0, 0)';
-    ctx.fillRect(10, 10, 80, 50);
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-    
-    
-    </script>
-    
-    
-    <script> 
-    var x= 2;
-    console.log(x);
-    //myFunction();   
-    function myFunction() {
-        x = document.getElementById("myNumber").value;
-        var y = document.getElementById("myNumber").value;
-        console.log("test y value ", y); 
-        console.log("test x value", x);
-        var canvas = document.getElementById('canvas');
-        if (canvas.getContext) {
-            console.log(x);
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (var i=0; i<y; i++){
-            ctx.fillStyle = 'rgb(200, 0, 0)';
-            ctx.fillRect(10, 10+80*i, 80, 50);
-            ctx.fillStyle = 'rgb(100, 10, 50)';
-            ctx.fillRect(600, 10+80*i, 80, 50);
-            }
-    }
-    }
-    console.log("outside function scope ", x);
-    </script>
-
-    <script type="text/babel" src="index.jsx"> </script>
-
+    <script type="text/javascript" src="main.js"> </script>
 </body>
 </html>
