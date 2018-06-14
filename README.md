@@ -81,3 +81,16 @@ mysql -u root -p
 * we can initialize variables in constructor
 * use {{ctrl.variable}} in html for variable
 * can also use ctrl.variable in expressions
+
+## compile React
+```
+npm init -y
+npm install --save-dev babel-cli
+npm install --save-dev babel-preset-es2015 babel-preset-react
+babel --presets es2015,react --watch src/ --out-dir dist
+npm install -g http-server
+http-server
+npm install webpack react --save-dev
+ node_modules/.bin/webpack index.jsx browser-bundle.js
+ 128.110.96.95:8080
+```
