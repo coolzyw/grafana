@@ -57,7 +57,7 @@ function pop_one_daemon(){
 // one daemon is down
 function down_one_bd(){
     var canvas = document.getElementById('canvas');
-    down_bd = document.getElementById('down_bd').value;
+    down_bd = document.getElementById('down').value;
     if (canvas.getContext) {
         var ctx = canvas.getContext('2d');
         ctx.fillStyle = 'rgb(0, 0, 0)';
@@ -69,7 +69,7 @@ function down_one_bd(){
 // pop up one daemon
 function pop_one_bd(){
     var canvas = document.getElementById('canvas');
-    up_bd = document.getElementById('down_bd').value;
+    up_bd = document.getElementById('down').value;
     if (canvas.getContext) {
         console.log(x);
         var ctx = canvas.getContext('2d');
@@ -293,7 +293,7 @@ var startX,startY;
 var hexes=[];
 hexes.push({
   points:[{x:10,y:10},{x:10,y:10+80},{x:10+50,y:10},{x:10+50,y:10+80}],
-  url:'http://128.110.96.95:3000/d/DxYJ2HSiz/block_device?refresh=5s&orgId=1',
+  url:'http://128.110.96.95:3000/d/000000003/general-info?refresh=10s&orgId=1',
 });
 
 //draw();
@@ -330,11 +330,13 @@ function handleMouseDown(e){
       ctx.lineTo(h.points[j].x,h.points[j].y);
     }
     ctx.closePath();
-    //if(ctx.isPointInPath(mouseX,mouseY)){ window.open(h.url, '_blank'); }
       if (ctx.isPointInPath(mouseX, mouseY)) { alert('Navigate to: ' + h.url); }
-      //if(ctx.isPointInPath(mouseX,mouseY)){ window.open(h.url); }
       var windowObjectReference;
       var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
       windowObjectReference = window.open(h.url, "detailed page", strWindowFeatures);
   }
 }
+
+//D3
+//squilite
+//voltdb swap activities
