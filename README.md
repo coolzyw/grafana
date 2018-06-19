@@ -68,6 +68,8 @@ mysql -u root -p
 ## infiniswap
 * /var/lib/lxc
 * /proj
+* ~/home/ubuntu/
+* lxc-start -n test1 -d
 * lxc-attach -n test1
 
 ## grafana plugins

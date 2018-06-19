@@ -1,24 +1,49 @@
 // machine number
+var machine_number = 0;
+var hexes=[];
 function initial() {
     var canvas = document.getElementById('canvas');
     x = document.getElementById('init').value;
+    machine_number = x;
     if (canvas.getContext) {
         console.log(x);
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var width = canvas.width;
+        var height = canvas.height;
+        var left_margin = width/5.4*0.2;
+        var rectangle_width = width/5.4;
+        var rectangle_height = height/x*0.5;
+        var margin_rectangle = height/x*0.25;
+        var gap_rectangle = height/x*0.25;
+        for (var i=0;i<machine_number;i++){
+            var item = {};
+            item.points = [];
+            item.points.push({x:left_margin, y:margin_rectangle + (margin_rectangle + rectangle_height) * i});
+            item.points.push({x:left_margin+rectangle_width, y:margin_rectangle + (margin_rectangle + rectangle_height) * i});
+            item.points.push({x:left_margin+rectangle_width, y:margin_rectangle + (margin_rectangle + rectangle_height) * i+rectangle_height});
+            item.points.push({x:left_margin,y:margin_rectangle + (margin_rectangle + rectangle_height) * i + rectangle_height});
+            item.url = 'http://128.110.96.95:3000/d/000000003/general-info?refresh=10s&orgId=1';
+            hexes.push(item);
+        }
         for (var i = 0; i < x; i++) {
             ctx.fillStyle = 'rgb(200, 0, 0)';
-            ctx.fillRect(10, 10 + 80 * i, 80, 50);
+            ctx.fillRect(left_margin, margin_rectangle + (margin_rectangle+rectangle_height) * i, 
+            rectangle_width, rectangle_height);
             ctx.fillStyle = "black";
             ctx.font = "bold 12px Arial";
             var word_1 = "BD_" + i;
-            ctx.fillText(word_1, 10+80/4,10 + 80 * i+50/2 );
+            ctx.fillText(word_1, left_margin+rectangle_width/2.5, 
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/2);
             ctx.fillStyle = 'rgb(100, 10, 50)';
-            ctx.fillRect(300, 10 + 80 * i, 80, 50);
+            ctx.fillRect(width-left_margin-rectangle_width, 
+                margin_rectangle + (margin_rectangle+rectangle_height) * i, 
+                rectangle_width, rectangle_height);
             ctx.fillStyle = "white";
             ctx.font = "bold 12px Arial";
             var word_2 = "Dae_" + i;
-            ctx.fillText(word_2, 300+80/4,10 + 80 * i+50/2 );
+            ctx.fillText(word_2, width-left_margin-rectangle_width+rectangle_width/2.5,
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/2);
         }
     }
 }
@@ -277,6 +302,15 @@ var canvas=document.getElementById("canvas");
 var ctx=canvas.getContext("2d");
 var cw=canvas.width;
 var ch=canvas.height;
+var width = canvas.width;
+var height = canvas.height;
+var left_margin = width/5.4*0.2;
+var rectangle_width = width/5.4;
+var rectangle_height = height/machine_number*0.5;
+var margin_rectangle = height/machine_number*0.25;
+var gap_rectangle = height/machine_number*0.25;
+
+
 function reOffset(){
   var BB=canvas.getBoundingClientRect();
   offsetX=BB.left;
@@ -290,13 +324,17 @@ window.onresize=function(e){ reOffset(); }
 var isDown=false;
 var startX,startY;
 
-var hexes=[];
+
+
+/*
 hexes.push({
-  points:[{x:10,y:10},{x:10,y:10+80},{x:10+50,y:10},{x:10+50,y:10+80}],
+  points:tmp_points,
   url:'http://128.110.96.95:3000/d/000000003/general-info?refresh=10s&orgId=1',
 });
+*/
 
-//draw();
+console.log("machine number is ", machine_number);
+draw();
 
 $("#canvas").mousedown(function(e){handleMouseDown(e);});
 
@@ -330,10 +368,12 @@ function handleMouseDown(e){
       ctx.lineTo(h.points[j].x,h.points[j].y);
     }
     ctx.closePath();
-      if (ctx.isPointInPath(mouseX, mouseY)) { alert('Navigate to: ' + h.url); }
-      var windowObjectReference;
-      var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
-      windowObjectReference = window.open(h.url, "detailed page", strWindowFeatures);
+      if (ctx.isPointInPath(mouseX, mouseY)) {
+          alert('Navigate to: ' + h.url);
+          var windowObjectReference;
+          var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
+          windowObjectReference = window.open(h.url, "detailed page", strWindowFeatures);
+      }
   }
 }
 
