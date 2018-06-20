@@ -32,9 +32,19 @@ function initial() {
             rectangle_width, rectangle_height);
             ctx.fillStyle = "black";
             ctx.font = "bold 12px Arial";
+            // fill title
+            var title_space = 3.5;
             var word_1 = "BD_" + i;
-            ctx.fillText(word_1, left_margin+rectangle_width/2.5, 
-                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/2);
+            ctx.fillText(word_1, left_margin+rectangle_width/title_space, 
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/3);
+            var latency_bd = 30;
+            var word_3 = "Latency: " + latency_bd;
+            ctx.fillText(word_3, left_margin+rectangle_width/title_space, 
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/3)*1.4);
+            var throughput_bd = 30;
+            var word_4 = "Throughput: "+throughput_bd;
+            ctx.fillText(word_4, left_margin+rectangle_width/title_space, 
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/3)*1.8);
             ctx.fillStyle = 'rgb(100, 10, 50)';
             ctx.fillRect(width-left_margin-rectangle_width, 
                 margin_rectangle + (margin_rectangle+rectangle_height) * i, 
@@ -42,8 +52,16 @@ function initial() {
             ctx.fillStyle = "white";
             ctx.font = "bold 12px Arial";
             var word_2 = "Dae_" + i;
-            ctx.fillText(word_2, width-left_margin-rectangle_width+rectangle_width/2.5,
-                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/2);
+            ctx.fillText(word_2, width-left_margin-rectangle_width+rectangle_width/title_space,
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/3);
+            var latency_dae = 30;
+            var word_5 = "Latency: " + latency_dae;
+            ctx.fillText(word_5, width-left_margin-rectangle_width+rectangle_width/title_space,
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/3)*1.4);
+            var throughput_dae = 30;
+            var word_6 = "Throughput" + throughput_dae;
+            ctx.fillText(word_6, width-left_margin-rectangle_width+rectangle_width/title_space,
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/3)*1.8);
         }
     }
 }
@@ -114,9 +132,47 @@ function link(){
     var right = document.getElementById('right').value;
     if (canvas.getContext) {
         var ctx = canvas.getContext('2d');
+        var width = canvas.width;
+        var height = canvas.height;
+        var left_margin = width/5.4*0.2;
+        var rectangle_width = width/5.4;
+        var rectangle_height = height/x*0.5;
+        var margin_rectangle = height/x*0.25;
         ctx.beginPath();
-        ctx.moveTo(10 + 80, 10 + 80 * left + 50/2);
-        ctx.lineTo(300, 10 + 80 * right + 50/2);
+        ctx.moveTo(left_margin + rectangle_width, 
+        margin_rectangle + (margin_rectangle+rectangle_height) * left + rectangle_height/2);
+        var lineWidth = 0;
+        var throughput = 40;
+        if (throughput <50){
+            lineWidth = 2;
+        }
+        else if (throughput >= 50 && throughput <75){
+            lineWidth = 5;
+        }
+        else if (throuput >= 75 && throughput <100){
+            lineWidth = 8;
+        }
+        else{
+            lineWidth = 10;
+        }
+        var latency = 80;
+        var style = "";
+        if (latency <30){
+            style = "green";
+        }
+        else if (latency >=30 && latency<60){
+            style = "yellow";
+        }
+        else if (latency >60 && latency <80){
+            style = "orange"
+        }
+        else {
+            style = "red";
+        }
+        ctx.strokeStyle = style;
+        ctx.lineWidth = lineWidth;
+        ctx.lineTo(width-left_margin-rectangle_width,
+        margin_rectangle + (margin_rectangle+rectangle_height) * right + rectangle_height/2);
         ctx.stroke();
     }
 }
