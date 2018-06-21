@@ -36,15 +36,15 @@ function initial() {
             var title_space = 3.5;
             var word_1 = "BD_" + i;
             ctx.fillText(word_1, left_margin+rectangle_width/title_space, 
-                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/3);
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/4);
             var latency_bd = 30;
             var word_3 = "Latency: " + latency_bd;
             ctx.fillText(word_3, left_margin+rectangle_width/title_space, 
-                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/3)*1.4);
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/4)*2);
             var throughput_bd = 30;
             var word_4 = "Throughput: "+throughput_bd;
             ctx.fillText(word_4, left_margin+rectangle_width/title_space, 
-                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/3)*1.8);
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/4)*3);
             ctx.fillStyle = 'rgb(100, 10, 50)';
             ctx.fillRect(width-left_margin-rectangle_width, 
                 margin_rectangle + (margin_rectangle+rectangle_height) * i, 
@@ -53,15 +53,15 @@ function initial() {
             ctx.font = "bold 12px Arial";
             var word_2 = "Dae_" + i;
             ctx.fillText(word_2, width-left_margin-rectangle_width+rectangle_width/title_space,
-                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/3);
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+rectangle_height/4);
             var latency_dae = 30;
             var word_5 = "Latency: " + latency_dae;
             ctx.fillText(word_5, width-left_margin-rectangle_width+rectangle_width/title_space,
-                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/3)*1.4);
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/4)*2);
             var throughput_dae = 30;
             var word_6 = "Throughput" + throughput_dae;
             ctx.fillText(word_6, width-left_margin-rectangle_width+rectangle_width/title_space,
-                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/3)*1.8);
+                margin_rectangle + (margin_rectangle+rectangle_height) * i+(rectangle_height/4)*3);
         }
     }
 }
