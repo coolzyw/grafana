@@ -1,10 +1,12 @@
 // block device slab graph
 // initial();
 var hexes = [];
+var slab = [];
+var mapped_slab = [1, 2, 3, 4, 7];
 function initial() {
     var canvas = document.getElementById('canvas');
     hexes = [];
-    var mapped_slab = [1, 2, 3, 4, 7];
+    slab = [];
     if (canvas.getContext) {
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -52,7 +54,18 @@ function initial() {
             item.url = 'http://128.110.96.95:3000/d/000000003/general-info?refresh=10s&orgId=1';
             hexes.push(item);
         }
+        for (var i=0;i<slab_number;i++){
+            var item = {};
+            item.points = [];
+            item.points.push({ x: left_margin + i * slab_width + slab_width / 8, y: top_margin + rectangle_height / 4 });
+            item.points.push({ x: left_margin + i * slab_width + slab_width / 8 + slab_width / 5 * 4, y: top_margin + rectangle_height / 4 });
+            item.points.push({ x: left_margin + i * slab_width + slab_width / 8 + slab_width / 5 * 4, y: top_margin + rectangle_height / 4 + rectangle_height / 2});
+            item.points.push({ x: left_margin + i * slab_width + slab_width / 8, y: top_margin + rectangle_height / 4 + rectangle_height / 2});
+            item.url = 'http://128.110.96.95:3000/d/000000003/general-info?refresh=10s&orgId=1';
+            slab.push(item);
+        }
         draw(mapped_slab);
+        //draw_slab(mapped_slab);
         // slab title
         for (var i = 0; i < slab_number; i++) {
             ctx.fillStyle = "black";
@@ -141,9 +154,11 @@ function draw(mapped_slab) {
         }
         ctx.closePath();
         ctx.stroke();
-        ctx.fillStyle = 'grey';
+        ctx.fillStyle = 'rgb(255,105,180)';
         ctx.fillRect(h.points[0].x, h.points[0].y,
             h.points[1].x - h.points[0].x, h.points[3].y - h.points[0].y);
+        // fill slab
+
         // fill evict
         ctx.fillStyle = "white";
         ctx.font = "bold 10px Arial";
@@ -152,6 +167,23 @@ function draw(mapped_slab) {
         var evict_height = h.points[3].y - h.points[0].y;
         ctx.fillText(word_1, h.points[0].x + evict_width / 8,
             h.points[0].y + evict_height / 4 * 3);
+    }
+}
+
+function draw_slab(mapped_slab) {
+    console.log("hello");
+    for (var i = 0; i < slab.length; i++) {
+        var h = slab[i];
+        ctx.beginPath();
+        ctx.moveTo(h.points[0].x, h.points[0].y);
+        for (var j = 1; j < h.points.length; j++) {
+            ctx.lineTo(h.points[j].x, h.points[j].y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillStyle = 'rgb(255,105,180)';
+        ctx.fillRect(h.points[0].x, h.points[0].y,
+            h.points[1].x - h.points[0].x, h.points[3].y - h.points[0].y);
     }
 }
 
@@ -178,4 +210,30 @@ function handleMouseDown(e) {
             alert("send a web socket to infiniswap");
         }
     }
+
+    for (var i = 0; i < slab.length; i++) {
+        var h = slab[i];
+        ctx.beginPath();
+        ctx.moveTo(h.points[0].x, h.points[0].y);
+        for (var j = 1; j < h.points.length; j++) {
+            ctx.lineTo(h.points[j].x, h.points[j].y);
+        }
+        ctx.closePath();
+        if (ctx.isPointInPath(mouseX, mouseY)) {
+            var word = "";
+            var found = mapped_slab.find(function (element) {
+                return element == i;
+            });
+            if (typeof found == 'undefined'){
+                word = "not mapped slab"
+            }
+            else{
+                word = "navigate to daemon " + i;
+            }
+            var windowObjectReference;
+            var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
+            alert(word);
+        }
+    }
+
 }
