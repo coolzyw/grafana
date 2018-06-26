@@ -18,7 +18,8 @@ function initial() {
         var rectangle_width = width / 15 * 10;
         // background color
         ctx.strokeStyle = "black";
-        ctx.fillStyle = "rgba(255, 255, 0, .5)";
+        //ctx.fillStyle = "rgba(255, 255, 0, .5)";
+        ctx.fillStyle = "white";
         roundRect(ctx, left_margin, top_margin, rectangle_width, rectangle_height, 40, true);
         // text
         ctx.fillStyle = "black";
@@ -160,7 +161,7 @@ function draw(mapped_slab) {
         // fill slab
 
         // fill evict
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "whselect ite";
         ctx.font = "bold 10px Arial";
         var word_1 = "EVICT";
         var evict_width = h.points[1].x - h.points[0].x;
@@ -237,3 +238,31 @@ function handleMouseDown(e) {
     }
 
 }
+
+
+function WebSocketTest() {
+    if ("WebSocket" in window) {
+        alert("WebSocket is supported by your Browser!");
+        // Let us open a web socket
+        
+        var ws = new WebSocket("ws://localhost:9998/echo");
+        ws.onopen = function () {
+            // Web Socket is connected, send data using send()
+            ws.send("Message to send");
+            alert("Message is sent...");
+        };
+        ws.onmessage = function (evt) {
+            var received_msg = evt.data;
+            alert("Message is received...");
+        };
+        ws.onclose = function () {
+            // websocket is closed.
+            alert("Connection is closed...");
+        };
+    }
+    else {
+        // The browser doesn't support WebSocket
+        alert("WebSocket NOT supported by your Browser!");
+    }
+}
+WebSocketTest();
