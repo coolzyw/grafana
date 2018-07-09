@@ -35,10 +35,10 @@ function initial() {
             var found = mapped_slab.find(function (element) {
                 return element == i;
             });
-            if (typeof found == 'undefined'){
+            if (typeof found == 'undefined') {
                 ctx.fillStyle = "grey";
             }
-            else{
+            else {
                 ctx.fillStyle = "rgb(135, 206, 250)";
             }
             roundRect(ctx, left_margin + i * slab_width + slab_width / 8, top_margin + rectangle_height / 4,
@@ -55,13 +55,13 @@ function initial() {
             item.url = 'http://128.110.96.95:3000/d/000000003/general-info?refresh=10s&orgId=1';
             hexes.push(item);
         }
-        for (var i=0;i<slab_number;i++){
+        for (var i = 0; i < slab_number; i++) {
             var item = {};
             item.points = [];
             item.points.push({ x: left_margin + i * slab_width + slab_width / 8, y: top_margin + rectangle_height / 4 });
             item.points.push({ x: left_margin + i * slab_width + slab_width / 8 + slab_width / 5 * 4, y: top_margin + rectangle_height / 4 });
-            item.points.push({ x: left_margin + i * slab_width + slab_width / 8 + slab_width / 5 * 4, y: top_margin + rectangle_height / 4 + rectangle_height / 2});
-            item.points.push({ x: left_margin + i * slab_width + slab_width / 8, y: top_margin + rectangle_height / 4 + rectangle_height / 2});
+            item.points.push({ x: left_margin + i * slab_width + slab_width / 8 + slab_width / 5 * 4, y: top_margin + rectangle_height / 4 + rectangle_height / 2 });
+            item.points.push({ x: left_margin + i * slab_width + slab_width / 8, y: top_margin + rectangle_height / 4 + rectangle_height / 2 });
             item.url = 'http://128.110.96.95:3000/d/000000003/general-info?refresh=10s&orgId=1';
             slab.push(item);
         }
@@ -144,7 +144,7 @@ function draw(mapped_slab) {
         var found = mapped_slab.find(function (element) {
             return element == i;
         });
-        if (typeof found == 'undefined'){
+        if (typeof found == 'undefined') {
             continue;
         }
         var h = hexes[i];
@@ -225,10 +225,10 @@ function handleMouseDown(e) {
             var found = mapped_slab.find(function (element) {
                 return element == i;
             });
-            if (typeof found == 'undefined'){
+            if (typeof found == 'undefined') {
                 word = "not mapped slab"
             }
-            else{
+            else {
                 word = "navigate to daemon " + i;
             }
             var windowObjectReference;
@@ -239,13 +239,12 @@ function handleMouseDown(e) {
 
 }
 
-
 function WebSocketTest() {
     if ("WebSocket" in window) {
         alert("WebSocket is supported by your Browser!");
         // Let us open a web socket
         
-        var ws = new WebSocket("ws://localhost:9998/echo");
+        var ws = new WebSocket("ws://localhost:1234");
         ws.onopen = function () {
             // Web Socket is connected, send data using send()
             ws.send("Message to send");
