@@ -1,4 +1,4 @@
-var ipc = require('node-ipc');
+var ipc = global.require('node-ipc');
 
 var socketId = 'icp-test';
 ipc.config.id = 'hello';
