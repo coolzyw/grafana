@@ -16,7 +16,7 @@ var io = require('socket.io')(http) //require socket.io module and pass the http
 http.listen(4000); //listen to port 8080
 
 function handler (req, res) { //create server
-  fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
+  fs.readFile(__dirname + '/public/slab.html', function(err, data) { //read file index.html in public folder
     if (err) {
       res.writeHead(404, {'Content-Type': 'text/html'}); //display 404 on error
       return res.end("404 Not Found");
