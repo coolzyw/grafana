@@ -1,6 +1,8 @@
 
 var ipc = require('node-ipc');
 
+var url = require('url');
+
 var socketId = 'icp-test';
 ipc.config.id = 'hello';
 ipc.config.socketRoot = '/tmp/';
@@ -9,13 +11,20 @@ ipc.config.appspace = '';
 ipc.config.retry = 1500;
 
 
-var http = require('http').createServer(handler); //require http server, and create server with function handler()
+var https = require('http').createServer(handler); //require http server, and create server with function handler()
 var fs = require('fs'); //require filesystem module
-var io = require('socket.io')(http) //require socket.io module and pass the http object (server)
+var io = require('socket.io')(https) //require socket.io module and pass the http object (server)
 
-http.listen(4000); //listen to port 8080
+https.listen(4000); //listen to port 8080
 
+var path = "";
 function handler (req, res) { //create server
+    path = url.parse(req.url).pathname;
+    console.log("path is: ",path);
+    ipc.of[socketId].emit(
+        'message',  //any event or message type your server listens for
+        path,
+    )
   fs.readFile(__dirname + '/public/slab.html', function(err, data) { //read file index.html in public folder
     if (err) {
       res.writeHead(404, {'Content-Type': 'text/html'}); //display 404 on error
@@ -40,7 +49,6 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
 });
 
 
-
 ipc.connectTo(
     socketId,
     function () {
@@ -51,8 +59,7 @@ ipc.connectTo(
                 ipc.log('## connected to world ##'.rainbow, ipc.config.delay);
                 ipc.of[socketId].emit(
                     'message',  //any event or message type your server listens for
-                    'hello',
-                    "new message inserted"
+                    'connection success'
                 )
             }
         );
