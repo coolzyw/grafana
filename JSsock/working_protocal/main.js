@@ -17,35 +17,38 @@ var io = require('socket.io')(https) //require socket.io module and pass the htt
 
 https.listen(4000); //listen to port 8080
 
-var path = "";
-function handler (req, res) { //create server
+var pre_path = "";
+function handler(req, res) { //create server
     path = url.parse(req.url).pathname;
-    console.log("path is: ",path);
-    ipc.of[socketId].emit(
-        'message',  //any event or message type your server listens for
-        path,
-    )
-  fs.readFile(__dirname + '/public/slab.html', function(err, data) { //read file index.html in public folder
-    if (err) {
-      res.writeHead(404, {'Content-Type': 'text/html'}); //display 404 on error
-      return res.end("404 Not Found");
-    } 
-    res.writeHead(200, {'Content-Type': 'text/html'}); //write HTML
-    res.write(data); //write data from index.html
-    return res.end();
-  });
+    // if (path != pre_path) {
+        console.log("path is: ", path);
+        ipc.of[socketId].emit(
+            'message',  //any event or message type your server listens for
+            path,
+        )
+    //}
+    pre_path = path;
+    fs.readFile(__dirname + '/public/slab.html', function (err, data) { //read file index.html in public folder
+        if (err) {
+            res.writeHead(404, { 'Content-Type': 'text/html' }); //display 404 on error
+            return res.end("404 Not Found");
+        }
+        res.writeHead(200, { 'Content-Type': 'text/html' }); //write HTML
+        res.write(data); //write data from index.html
+        return res.end();
+    });
 }
 
 io.sockets.on('connection', function (socket) {// WebSocket Connection
-  var lightvalue = 0; //static variable for current status
-  socket.on('light', function(data) { //get light switch status from client
-    lightvalue = data;
-    console.log(lightvalue); //turn LED on or off, for now we will just show it in console.log
-    ipc.of[socketId].emit(
-        'message',  //any event or message type your server listens for
-        'hello'+data,
-    )
-  });
+    var lightvalue = 0; //static variable for current status
+    socket.on('light', function (data) { //get light switch status from client
+        lightvalue = data;
+        console.log(lightvalue); //turn LED on or off, for now we will just show it in console.log
+        ipc.of[socketId].emit(
+            'message',  //any event or message type your server listens for
+            'hello' + data,
+        )
+    });
 });
 
 
