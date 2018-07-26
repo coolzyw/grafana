@@ -96,3 +96,13 @@ npm install webpack react --save-dev
  node_modules/.bin/webpack index.jsx browser-bundle.js
  128.110.96.95:8080
 ```
+
+## install nodejs on cloudlab
+* update nodejs to the latest version
+* node main.js or nodejs main.js
+* sudo apt-get install -y nodejs
+* https://nodesource.com/blog/installing-node-js-tutorial-ubuntu/
+* https://askubuntu.com/questions/426750/how-can-i-update-my-nodejs-to-the-latest-version
+* npm init
+* use npm to install nodejs
+* sudo npm install socket.io
