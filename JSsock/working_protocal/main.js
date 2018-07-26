@@ -13,7 +13,7 @@ ipc.config.retry = 1500;
 
 var https = require('http').createServer(handler); //require http server, and create server with function handler()
 var fs = require('fs'); //require filesystem module
-var io = require('socket.io')(https) //require socket.io module and pass the http object (server)
+var io = require('socket.io')(https); //require socket.io module and pass the http object (server)
 
 https.listen(4000); //listen to port 8080
 
