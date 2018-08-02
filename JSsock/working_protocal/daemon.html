@@ -1,277 +1,275 @@
 <canvas id="myCanvas">
-</canvas>
-<p id="chunk_info"> </p>
-<form name="data">
-    <input type="hidden" name="mem_status" value=$mem_status />
-    <input type="hidden" name="chunk_mapping" value=$chunk_mapping />
-    <input type="hidden" name="device_ip" value=$device_ip />
-</form>
-
-<script>
-
-    var mem_status = document.data.mem_status.value;
-    var chunk_mapping = document.data.chunk_mapping.value.substring(1, document.data.chunk_mapping.value.length - 1).split(',');
-
-
-    var mapped_chunks = new Object();
- 
-    function read_mapping() {
-      
-         var chunk = -1;
-        var ip = "";
-        var lastpart = "nothing";
-        for (var part of chunk_mapping) {
-            if (part.length <= 2) {
-                if (lastpart.length <= 2) {
-                    mapped_chunks[lastpart] = ip;
+    </canvas>
+    <p id="chunk_info"> </p>
+    <form name="data">
+        <input type="hidden" name="mem_status" value=$mem_status />
+        <input type="hidden" name="chunk_mapping" value=$chunk_mapping />
+        <input type="hidden" name="device_ip" value=$device_ip />
+    </form>
+    
+    <script>
+    
+        var mem_status = document.data.mem_status.value;
+        var chunk_mapping = document.data.chunk_mapping.value.substring(1, document.data.chunk_mapping.value.length - 1).split(',');
+    
+    
+        var mapped_chunks = new Object();
+     
+        function read_mapping() {
+          
+             var chunk = -1;
+            var ip = "";
+            var lastpart = "nothing";
+            for (var part of chunk_mapping) {
+                if (part.length <= 2) {
+                    if (lastpart.length <= 2) {
+                        mapped_chunks[lastpart] = ip;
+                    }
+                    chunk = part;
                 }
-                chunk = part;
+                else {
+                    ip = part;
+                    mapped_chunks[chunk] = ip;
+                }
+                lastpart = part;
             }
-            else {
-                ip = part;
-                mapped_chunks[chunk] = ip;
+            if (lastpart.length <= 2) {
+                mapped_chunks[lastpart] = ip;
             }
-            lastpart = part;
         }
-        if (lastpart.length <= 2) {
-            mapped_chunks[lastpart] = ip;
+    
+        read_mapping();
+    
+        var num = 32;
+        var canvas = document.getElementById("myCanvas");
+        canvas.width = window.innerWidth * 8.6 / 10;
+        canvas.height = window.innerWidth / 10;
+        var ctx = canvas.getContext("2d");
+        var left = canvas.width / (num + 2);
+        var right = canvas.width * (num + 1) / (num + 2);
+        var blockwidth = canvas.width / num * 4 / 5;
+        var distance = canvas.width / (num + 2);
+        var blockheight = canvas.height / 4 * 3;
+        var graphtop = canvas.height / 8;
+        var fontsize = canvas.height / 8;
+        var lastShowBlock = 0;
+        var moving = false;
+    
+        function drawMemBlock(i) {
+            if (i < 0) {
+                return;
+            }
+            var type = mem_status[i];
+            switch (type) {
+                case '0':
+                    ctx.fillStyle = "#EEEEEE";
+                    break;
+                case '1':
+                    ctx.fillStyle = "#00FFFF";
+                    break;
+                case '2':
+                    ctx.fillStyle = "#FF0000";
+                    break;
+            }
+            ctx.fillRect(left + distance * i, graphtop, blockwidth, blockheight);
+            
+            ctx.fillRect(left + distance * i, graphtop+blockheight*1.5, blockwidth, blockheight/2);
         }
-    }
-
-    read_mapping();
-
-    var num = 32;
-    var canvas = document.getElementById("myCanvas");
-    canvas.width = window.innerWidth * 8.6 / 10;
-    canvas.height = window.innerWidth / 10;
-    var ctx = canvas.getContext("2d");
-    var left = canvas.width / (num + 2);
-    var right = canvas.width * (num + 1) / (num + 2);
-    var blockwidth = canvas.width / num * 4 / 5;
-    var distance = canvas.width / (num + 2);
-    var blockheight = canvas.height / 4 * 3;
-    var graphtop = canvas.height / 8;
-    var fontsize = canvas.height / 8;
-    var lastShowBlock = 0;
-    var moving = false;
-
-    function drawMemBlock(i) {
-        if (i < 0) {
-            return;
-        }
-        var type = mem_status[i];
-        switch (type) {
-            case '0':
-                ctx.fillStyle = "#EEEEEE";
-                break;
-            case '1':
-                ctx.fillStyle = "#00FFFF";
-                break;
-            case '2':
-                ctx.fillStyle = "#FF0000";
-                break;
-        }
-        ctx.fillRect(left + distance * i, graphtop, blockwidth, blockheight);
         
-        ctx.fillRect(left + distance * i, graphtop+blockheight*1.5, blockwidth, blockheight/2);
-    }
-    
-    function drawMemBlocks() {
-        for (var i = 0; i < num; i++) {
-            drawMemBlock(i);
+        function drawMemBlocks() {
+            for (var i = 0; i < num; i++) {
+                drawMemBlock(i);
+            }
         }
-    }
-
-    drawMemBlocks();
-
-    setInterval(function () {
-        var new_mem_status = document.data.mem_status.value;
-        if (new_mem_status !== mem_status) {
-            mem_status = new_mem_status;
-            drawMemBlocks();
-            read_mapping();
-        }
-    }, 5000);
     
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // initialize array
-    var check = [];
-    for (var i = 1; i <= num; i++){
-      check.push("false");
-    }
-    console.log(check);
+        drawMemBlocks();
     
-    canvas.onmousemove = function (e) {
-        if (moving) {
-            return;
+        setInterval(function () {
+            var new_mem_status = document.data.mem_status.value;
+            if (new_mem_status !== mem_status) {
+                mem_status = new_mem_status;
+                drawMemBlocks();
+                read_mapping();
+            }
+        }, 5000);
+        
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
-        moving = true;
-        var rect = this.getBoundingClientRect();
-        var canvasPoint = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
+    
+        // initialize array
+        var check = [];
+        for (var i = 1; i <= num; i++){
+          check.push(false);
+        }
+        
+        var status = [];
+        for (var i = 1; i <= num; i++){
+          if (mem_status[i - 1]==2){
+            check.push(true);
+          }
+          else {
+            check.push(false);
+          }
+        }
+    
+        canvas.onmousemove = function (e) {
+            if (moving) {
+                return;
+            }
+            moving = true;
+            var rect = this.getBoundingClientRect();
+            var canvasPoint = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+    
+            var inblock = false;
+            for (var i = 1; i <= num; i++) {
+                if (canvasPoint.x > left + (i - 1) * distance && canvasPoint.x < left + (i - 1) * distance + blockwidth && canvasPoint.y > graphtop && canvasPoint.y < graphtop + blockheight) {
+                    if (i !== lastShowBlock) {
+                        ctx.textAlign = "center";
+                        ctx.font = fontsize + "px Arial";
+                        ctx.fillStyle = "#000000";
+                        ctx.fillText(i.toString(), left + (i - 1) * distance + 0.5 * blockwidth, graphtop + 0.6 * blockheight);
+                        drawMemBlock(lastShowBlock - 1);
+                        lastShowBlock = i;
+                        canvas.addEventListener('click', function(event) {
+                          console.log(lastShowBlock);
+                            if (check[lastShowBlock-1] === false || status[lastShowBlock-1]===false){
+                              check[lastShowBlock-1] = true;
+                            var windowObjectReference;
+                            var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
+                            var message = "send a websocket to infiniswap, daemon ";
+                            var chunk = lastShowBlock;
+                            message+=chunk.toString();
+                            //alert(message);
+                            var device_ip = document.data.device_ip.value;
+                            var url = "http://128.110.96.8:4000/evt/";
+                            url = url+device_ip.toString();
+                            url = url + "/";
+                            url = url+chunk.toString();
+                            var xmlHttp = new XMLHttpRequest();
+                            xmlHttp.open( "GET", url, false ); // false for synchronous request
+                            if (xmlHttp.status!=200){
+                              console.log("status ", xmlHttp.status);
+                              status[lastShowBlock-1] = false;
+                              
+                              alert("fail to send request");
+                            }
+                            else{
+                              xmlHttp.send( null );
+                              status[lastShowBlock-1] = true;
+                              alert (message);
+                            }
+                            }
+                            else if (check[lastShowBlock-1] === true || status[lastShowBlock-1]===true){
+                                alert("fail to send request");
+                            }
+                            //setTimeout(function(){}, 1000);
+                            }, false);
+    
+                        switch (mem_status[i - 1]) {
+                            case '0':
+                                document.getElementById('chunk_info').innerHTML = "This chunk is either free or used by local program.";
+                                break;
+                            case '1':
+                                document.getElementById('chunk_info').innerHTML = "This chunk is allocated but not used.";
+                                break;
+                            case '2':
+                                document.getElementById('chunk_info').innerHTML = "This chunk is being used by device: " + mapped_chunks[i] + ", chunk: 0.";
+                                break;
+                        }
+                    }
+                    inblock = true;
+                }
+            }
+            if (!inblock) {
+                drawMemBlock(lastShowBlock - 1);
+                lastShowBlock = 0;
+                document.getElementById('chunk_info').innerHTML = "";
+            }
+            moving = false;
         };
-
-        var inblock = false;
-        for (var i = 1; i <= num; i++) {
-            if (canvasPoint.x > left + (i - 1) * distance && canvasPoint.x < left + (i - 1) * distance + blockwidth && canvasPoint.y > graphtop && canvasPoint.y < graphtop + blockheight) {
-                if (i !== lastShowBlock) {
-                    ctx.textAlign = "center";
-                    ctx.font = fontsize + "px Arial";
-                    ctx.fillStyle = "#000000";
-                    ctx.fillText(i.toString(), left + (i - 1) * distance + 0.5 * blockwidth, graphtop + 0.6 * blockheight);
-                    drawMemBlock(lastShowBlock - 1);
-                    lastShowBlock = i;
-                    canvas.addEventListener('click', function(event) {
-                      console.log(lastShowBlock);
-                        if (check[lastShowBlock-1] === "false"){
-                          check[lastShowBlock-1] = "true";
+    
+        /*
+        function WebSocketTest() {
+                if ("WebSocket" in window) {
+                    alert("WebSocket is supported by your Browser!");
+                    // Let us open a web socket
+                    var ws = new WebSocket("ws://localhost:9998/echo");
+                    ws.onopen = function () {
+                        // Web Socket is connected, send data using send()
+                        ws.send("Message to send");
+                        alert("Message is sent...");
+                    };
+                    ws.onmessage = function (evt) {
+                        var received_msg = evt.data;
+                        alert("Message is received...");
+                    };
+                    ws.onclose = function () {
+                        // websocket is closed.
+                        alert("Connection is closed...");
+                    };
+                }
+                else {
+                    // The browser doesn't support WebSocket
+                    alert("WebSocket NOT supported by your Browser!");
+                }
+            }
+            WebSocketTest();
+        */
+        
+        
+        canvas.addEventListener('click', function(e) { 
+          if (moving) {
+                return;
+            }
+            moving = true;
+            var rect = this.getBoundingClientRect();
+            var canvasPoint = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+    
+            var inblock = false;
+            for (var i = 1; i <= num; i++) {
+                if (canvasPoint.x > left + (i - 1) * distance && canvasPoint.x < left + (i - 1) * distance + blockwidth && canvasPoint.y > graphtop && canvasPoint.y < graphtop + blockheight) {
+                    if (i !== lastShowBlock) {
+                        ctx.textAlign = "center";
+                        ctx.font = fontsize + "px Arial";
+                        ctx.fillStyle = "#000000";
+                        ctx.fillText(i.toString(), left + (i - 1) * distance + 0.5 * blockwidth, graphtop + 0.6 * blockheight);
+                        drawMemBlock(lastShowBlock - 1);
+                        lastShowBlock = i;
                         var windowObjectReference;
                         var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
-                        var message = "send a websocket to infiniswap, daemon ";
-                        var chunk = lastShowBlock;
-                        message+=chunk.toString();
-                        alert(message);
-                        var device_ip = document.data.device_ip.value;
-                        var url = "http://localhost:4000/evt/";
-                        url = url+device_ip.toString();
-                        url = url + "/";
-                        url = url+chunk.toString();
-                        var xmlHttp = new XMLHttpRequest();
-                        xmlHttp.open( "GET", url, false ); // false for synchronous request
-                        xmlHttp.send( null );
-                        //check[lastShowBlock-1] = "true";
+                        alert("send a web socket to infiniswap");
+    
+                        switch (mem_status[i - 1]) {
+                            case '0':
+                                document.getElementById('chunk_info').innerHTML = "This chunk is either free or used by local program.";
+                                break;
+                            case '1':
+                                document.getElementById('chunk_info').innerHTML = "This chunk is allocated but not used.";
+                                break;
+                            case '2':
+                                document.getElementById('chunk_info').innerHTML = "This chunk is being used by device: " + mapped_chunks[i] + ", chunk: 0.";
+                                break;
                         }
-                        //setTimeout(function(){}, 1000);
-                        }, false);
-
-                    switch (mem_status[i - 1]) {
-                        case '0':
-                            document.getElementById('chunk_info').innerHTML = "This chunk is either free or used by local program.";
-                            break;
-                        case '1':
-                            document.getElementById('chunk_info').innerHTML = "This chunk is allocated but not used.";
-                            break;
-                        case '2':
-                            document.getElementById('chunk_info').innerHTML = "This chunk is being used by device: " + mapped_chunks[i] + ", chunk: 0.";
-                            break;
                     }
+                    inblock = true;
                 }
-                inblock = true;
             }
-        }
-        if (!inblock) {
-            drawMemBlock(lastShowBlock - 1);
-            lastShowBlock = 0;
-            document.getElementById('chunk_info').innerHTML = "";
-        }
-        moving = false;
-    };
-
-    /*
-    function WebSocketTest() {
-            if ("WebSocket" in window) {
-                alert("WebSocket is supported by your Browser!");
-                // Let us open a web socket
-                var ws = new WebSocket("ws://localhost:9998/echo");
-                ws.onopen = function () {
-                    // Web Socket is connected, send data using send()
-                    ws.send("Message to send");
-                    alert("Message is sent...");
-                };
-                ws.onmessage = function (evt) {
-                    var received_msg = evt.data;
-                    alert("Message is received...");
-                };
-                ws.onclose = function () {
-                    // websocket is closed.
-                    alert("Connection is closed...");
-                };
+            if (!inblock) {
+                drawMemBlock(lastShowBlock - 1);
+                lastShowBlock = 0;
+                document.getElementById('chunk_info').innerHTML = "";
             }
-            else {
-                // The browser doesn't support WebSocket
-                alert("WebSocket NOT supported by your Browser!");
-            }
-        }
-        WebSocketTest();
-    */
-    
-    
-    canvas.addEventListener('click', function(e) { 
-      if (moving) {
-            return;
-        }
-        moving = true;
-        var rect = this.getBoundingClientRect();
-        var canvasPoint = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        };
-
-        var inblock = false;
-        for (var i = 1; i <= num; i++) {
-            if (canvasPoint.x > left + (i - 1) * distance && canvasPoint.x < left + (i - 1) * distance + blockwidth && canvasPoint.y > graphtop && canvasPoint.y < graphtop + blockheight) {
-                if (i !== lastShowBlock) {
-                    ctx.textAlign = "center";
-                    ctx.font = fontsize + "px Arial";
-                    ctx.fillStyle = "#000000";
-                    ctx.fillText(i.toString(), left + (i - 1) * distance + 0.5 * blockwidth, graphtop + 0.6 * blockheight);
-                    drawMemBlock(lastShowBlock - 1);
-                    lastShowBlock = i;
-                    var windowObjectReference;
-                    var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
-                    alert("send a web socket to infiniswap");
-
-                    switch (mem_status[i - 1]) {
-                        case '0':
-                            document.getElementById('chunk_info').innerHTML = "This chunk is either free or used by local program.";
-                            break;
-                        case '1':
-                            document.getElementById('chunk_info').innerHTML = "This chunk is allocated but not used.";
-                            break;
-                        case '2':
-                            document.getElementById('chunk_info').innerHTML = "This chunk is being used by device: " + mapped_chunks[i] + ", chunk: 0.";
-                            break;
-                    }
-                }
-                inblock = true;
-            }
-        }
-        if (!inblock) {
-            drawMemBlock(lastShowBlock - 1);
-            lastShowBlock = 0;
-            document.getElementById('chunk_info').innerHTML = "";
-        }
-        moving = false;
-      
-    }, false);
-</script>
-
-<button class="btn btn-success" id="st_dae"> START A DAEMON </button>
-<button class="btn btn-success" id="kl_dae"> KILL A DAEMON </button>
-
-
-<script>
-bt1.addEventListener('click', function(event) {
-    var url = "http://localhost:4000/st/dm";
-    alert("start a daemon");
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", url, false ); // false for synchronous request
-    xmlHttp.send( null );
-}, false);
-
-bt2.addEventListener('click', function(event) {
-    var url = "http://localhost:4000/kl/dm";
-    alert("kill daemon");
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", url, false ); // false for synchronous request
-    xmlHttp.send( null );
-}, false);
-</script>
-
+            moving = false;
+          
+        }, false);
+    </script>
 
 <form name="data">
     <input type="hidden" name="device_ip" value=$device_ip />
