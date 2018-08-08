@@ -1,0 +1,23 @@
+#!/usr/bin/expect
+spawn ./grafana_shell
+expect "Do you want to continue?"
+send "y"
+interact
+
+spawn ./mysql_shell
+expect "Do you want to continue?"
+send "y"
+interact
+
+spawn ./login_shell
+expect "password"
+send "mysql"
+interact
+
+# sudo service mysql start
+# sudo apt-get install -y nodejs
+# sudo apt-get install npm
+spawn ./node_shell
+expect "Do you want to continue?"
+send "y"
+interact
