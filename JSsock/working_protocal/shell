@@ -1,17 +1,23 @@
-#!/bin/bash
-sudo su
-wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana_5.1.4_amd64.deb
-sudo apt-get update
-sudo apt-get install grafana
-sudo service grafana-server start
-sudo apt-get install mysql-server
-sudo service mysql start
-sudo apt-get install -y nodejs
-sudo apt-get install npm
-sudo npm cache clean -f
-npm config set strict-ssl false
-sudo npm install -g n
-sudo n latest
-npm install node-ipc
-npm install socket.io
-node main.js
+#!/usr/bin/expect
+spawn ./grafana_shell
+expect "Do you want to continue?"
+send "y"
+interact
+
+spawn ./mysql_shell
+expect "Do you want to continue?"
+send "y"
+interact
+
+spawn ./login_shell
+expect "password"
+send "mysql"
+interact
+
+# sudo service mysql start
+# sudo apt-get install -y nodejs
+# sudo apt-get install npm
+spawn ./node_shell
+expect "Do you want to continue?"
+send "y"
+interact
