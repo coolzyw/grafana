@@ -1,0 +1,11 @@
+#!/bin/bash
+sudo service mysql start
+sudo apt-get install -y nodejs
+sudo apt-get install npm
+sudo npm cache clean -f
+npm config set strict-ssl false
+sudo npm install -g n
+sudo n latest
+npm install node-ipc
+npm install socket.io
+node main.js

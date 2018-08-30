@@ -1,0 +1,256 @@
+<canvas id="myCanvas">
+</canvas>
+<form name="data">
+    <input type="hidden" name="device_num" value=$device_num />
+    <input type="hidden" name="daemon_num" value=$daemon_num />
+    <input type="hidden" name="bd_num" value=$bd_num />
+    <input type="hidden" name="daemon_ip" value=$daemon_ip />
+    <input type="hidden" name="bd_ip" value=$bd_ip />
+    <input type="hidden" name="daemon_free" value=$daemon_free />
+    <input type="hidden" name="daemon_allocated" value=$daemon_allocated />
+    <input type="hidden" name="daemon_mapped" value=$daemon_mapped />
+    <input type="hidden" name="bd_pagein_throughput" value=$bd_pagein_throughput />
+    <input type="hidden" name="bd_pageout_throughput" value=$bd_pageout_throughput />
+    <input type="hidden" name="bd_pagein_latency" value=$bd_pagein_latency />
+    <input type="hidden" name="bd_pageout_latency" value=$bd_pageout_latency />
+    <input type="hidden" name="bd_mapping" value=$bd_mapping />
+</form>
+<button class="btn btn-success" id="st_dae"> START A DAEMON </button>
+  <button class="btn btn-success" id="kl_dae"> KILL A DAEMON </button>
+<script>
+    var num = 0;
+    var dev_ips = [];
+    var daemon_ips = "";
+    var bd_ips = "";
+    var daemon_set, bd_set;
+    var daemon_map, bd_map;
+
+    var canvas = document.getElementById("myCanvas");
+    canvas.width = window.innerWidth * 0.9;
+    canvas.height = canvas.width / 10;
+    var ctx = canvas.getContext("2d");
+    var left = canvas.width / 9;
+    var right = canvas.width * 8 / 9;
+    var blockwidth = canvas.width / 5;
+    var blockheight, fontsize;
+    
+    var bt1 = document.getElementById("st_dae");
+    var bt2 = document.getElementById("kl_dae");
+    
+    bt1.addEventListener('click', function(event) {
+        var url = "http://128.110.96.133:4000/st/dm";
+        alert("start a daemon");
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", url); // false for synchronous request
+        xmlHttp.send();
+    }, false);
+    
+    bt2.addEventListener('click', function(event) {
+        var url = "http://128.110.96.133:4000/kl/dm";
+        alert("kill daemon");
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", url, false ); // false for synchronous request
+        xmlHttp.send( null );
+    }, false);
+    
+
+    function adjust_graph_height() {
+        canvas.height = canvas.width / 15 * (2 * Math.sqrt(num) + 1);
+        blockheight = canvas.height / (2 * num + 1);
+        fontsize = canvas.height / (2 * num + 1) / 3;
+    }
+
+    function update_devices() {
+        var new_num = document.data.device_num.value;
+        var new_daemon_ips = "";
+        if (document.data.daemon_num.value > 0) {
+            new_daemon_ips = document.data.daemon_ip.value;
+        }
+        var new_bd_ips = "";
+        if (document.data.bd_num.value > 0) {
+            new_bd_ips = document.data.bd_ip.value;
+        }
+
+        // update if device status changes 
+        if (new_num !== num || new_daemon_ips !== daemon_ips || new_bd_ips !== bd_ips) {
+            if (new_num !== num) {
+                num = new_num;
+                adjust_graph_height();
+            }
+            daemon_ips = new_daemon_ips;
+            bd_ips = new_bd_ips;
+            daemon_set = new Set();
+            bd_set = new Set();
+            if (daemon_ips !== "") {
+                daemon_set = new Set(daemon_ips.substring(1, daemon_ips.length - 1).split(','));
+            }
+            if (bd_ips !== "") {
+                bd_set = new Set(bd_ips.substring(1, bd_ips.length - 1).split(','));
+            }
+
+            daemon_map = new Map();
+            bd_map = new Map();
+
+
+            //get the union of bd and daemon
+            var dev_ip_set = new Set();
+            for (var daemon_ip of daemon_set) {
+                dev_ip_set.add(daemon_ip);
+            }
+            for (var bd_ip of bd_set) {
+                dev_ip_set.add(bd_ip);
+            }
+            dev_ips = Array.from(dev_ip_set);
+            dev_ips.sort();
+
+        }
+
+        // map each daemon with the recording memory status
+        if (daemon_ips !== "") {
+            daemon_list = daemon_ips.substring(1, daemon_ips.length - 1).split(',');
+            free_list = document.data.daemon_free.value.substring(1, document.data.daemon_free.value.length - 1).split(',');
+            allocated_list = document.data.daemon_allocated.value.substring(1, document.data.daemon_allocated.value.length - 1).split(',');
+            mapped_list = document.data.daemon_mapped.value.substring(1, document.data.daemon_mapped.value.length - 1).split(',');
+            for (var i = 0; i < daemon_list.length; i++) {
+                daemon_map.set(daemon_list[i], { free: free_list[i].split(';')[1], allocated: allocated_list[i].split(';')[1], mapped: mapped_list[i].split(';')[1] });
+            }
+        }
+
+        if (bd_ips !== "") {
+            bd_list = bd_ips.substring(1, bd_ips.length - 1).split(',');
+            pagein_throughput_list = document.data.bd_pagein_throughput.value.substring(1, document.data.bd_pagein_throughput.value.length - 1).split(',');
+            pageout_throughput_list = document.data.bd_pageout_throughput.value.substring(1, document.data.bd_pageout_throughput.value.length - 1).split(',');
+            pagein_latency_list = document.data.bd_pagein_latency.value.substring(1, document.data.bd_pagein_latency.value.length - 1).split(',');
+            pageout_latency_list = document.data.bd_pageout_latency.value.substring(1, document.data.bd_pageout_latency.value.length - 1).split(',');
+            for (var i = 0; i < bd_list.length; i++) {
+                bd_map.set(bd_list[i], {
+                    pagein_throughput: pagein_throughput_list[i].split(';')[1],
+                    pageout_throughput: pageout_throughput_list[i].split(';')[1],
+                    pagein_latency: pagein_latency_list[i].split(';')[1],
+                    pageout_latency: pageout_latency_list[i].split(';')[1]
+                });
+            }
+        }
+
+        render();
+    }
+
+    setInterval(update_devices(), 5000);
+
+    function draw_bd_block(i) {
+        if (bd_set.has(dev_ips[i])) {
+            ctx.fillStyle = "brown";
+            ctx.font = (fontsize / 2) + "px Arial";
+            ctx.fillRect(left, blockheight * (2 * i + 1), blockwidth, blockheight);
+            ctx.fillStyle = "blue";
+            ctx.fillText("throughput: " + bd_map.get(dev_ips[i]).pagein_throughput + "/" + bd_map.get(dev_ips[i]).pageout_throughput,
+                left + blockwidth / 2, blockheight * (2 * i + 1) + fontsize / 2);
+            ctx.fillText("latency: " + bd_map.get(dev_ips[i]).pagein_latency + "/" + bd_map.get(dev_ips[i]).pageout_latency,
+                left + blockwidth / 2, blockheight * (2 * i + 2) - fontsize / 4);
+        }
+        else {
+            ctx.fillStyle = "#666666";
+            ctx.fillRect(left, blockheight * (2 * i + 1), blockwidth, blockheight);
+        }
+
+        ctx.fillStyle = "#000000";
+        ctx.textAlign = "center";
+        ctx.font = fontsize + "px Arial";
+        ctx.fillText(dev_ips[i], left + blockwidth / 2, blockheight * (2 * i + 1) + blockheight / 2 + fontsize / 3);
+    }
+
+    function draw_daemon_block(i) {
+        if (daemon_set.has(dev_ips[i])) {
+            var free = parseInt(daemon_map.get(dev_ips[i]).free);
+            var allocated = parseInt(daemon_map.get(dev_ips[i]).allocated);
+            var mapped = parseInt(daemon_map.get(dev_ips[i]).mapped);
+            var total_mem = free + allocated + mapped;
+            ctx.fillStyle = "green";
+            ctx.fillRect(right - blockwidth, blockheight * (2 * i + 1), blockwidth, blockheight);
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(right - blockwidth, blockheight * (2 * i + 1), blockwidth * (allocated + mapped) / total_mem, blockheight);
+            ctx.fillStyle = "orange";
+            ctx.fillRect(right - blockwidth, blockheight * (2 * i + 1), blockwidth * mapped / total_mem, blockheight);
+        }
+        else {
+            ctx.fillStyle = "#666666";
+            ctx.fillRect(right - blockwidth, blockheight * (2 * i + 1), blockwidth, blockheight);
+        }
+
+        ctx.fillStyle = "#000000";
+        ctx.textAlign = "center";
+        ctx.font = fontsize + "px Arial";
+        ctx.fillText(dev_ips[i], right - blockwidth / 2, blockheight * (2 * i + 1) + blockheight / 2 + fontsize / 3);
+    }
+
+    function link(i, j, throughput, latency) {
+        ctx.beginPath();
+        ctx.moveTo(left + blockwidth, blockheight * (2 * i + 1) + blockheight / 2);
+        var lineWidth = 0;
+        //var throughput = 0;
+        //var latency = 0;
+        /*
+        if (bd_set.has(dev_ips[i])) {
+            throughput = bd_map.get(dev_ips[i]).pagein_throughput + bd_map.get(dev_ips[i]).pageout_throughput;
+            latency = bd_map.get(dev_ips[i]).pagein_latency + bd_map.get(dev_ips[i]).pageout_latency; 
+            if (bd_map.get(dev_ips[i]).pagein_latency !== 0 && bd_map.get(dev_ips[i]).pageout_latency !== 0){
+                latency /= 2;
+            }
+        }
+        */
+        if (throughput < 100) {
+            lineWidth = 2;
+        }
+        else if (throughput >= 100 && throughput < 500) {
+            lineWidth = 5;
+        }
+        else if (throughput >= 500 && throughput < 3000) {
+            lineWidth = 8;
+        }
+        else {
+            lineWidth = 10;
+        }
+        
+        var style = "";
+        if (latency < 10) {
+            style = "green";
+        }
+        else if (latency >= 10 && latency < 30) {
+            style = "yellow";
+        }
+        else if (latency > 30 && latency < 100) {
+            style = "orange"
+        }
+        else {
+            style = "red";
+        }
+        ctx.strokeStyle = style;
+        ctx.lineWidth = lineWidth;
+        ctx.lineTo(right - blockwidth, blockheight * (2 * j + 1) + blockheight / 2);
+        ctx.stroke();
+    }
+
+    function render() {
+        ctx.fillStyle = "#FF0000";
+        ctx.textAlign = "center";
+        ctx.font = fontsize + "px Arial";
+        ctx.fillText("BD", left + blockwidth / 2, blockheight / 2 + fontsize / 2);
+        ctx.fillStyle = "#FFFF00";
+        ctx.textAlign = "center";
+        ctx.font = fontsize + "px Arial";
+        ctx.fillText("DAEMON", right - blockwidth / 2, blockheight / 2 + fontsize / 2);
+        for (var i = 0; i < num; i++) {
+            draw_bd_block(i);
+            draw_daemon_block(i);
+        }
+
+        var mapping_list = document.data.bd_mapping.value.substring(1, document.data.bd_mapping.value.length - 1).split(','); 
+        for (var map_relation of mapping_list){
+            var map_info = map_relation.split(';');
+            link(dev_ips.indexOf(map_info[0]), dev_ips.indexOf(map_info[1]), map_info[2] + map_info[3], (map_info[4] + map_info[5]) / 2);
+        }
+        //link(0, 1);
+    }
+
+    render();
+</script>
